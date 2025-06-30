@@ -2,7 +2,7 @@
 streamlit
 pandas
 numpy
-streamlit-star-rating
+st_star_rating
 
 # Dependencies for other scripts
 requests
