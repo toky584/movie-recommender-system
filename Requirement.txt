@@ -1,0 +1,42 @@
+# -------------------------------------------------
+# Dependencies for the Streamlit Web Application
+# -------------------------------------------------
+
+# The core web framework
+streamlit
+
+# For data manipulation and reading CSV files
+pandas
+
+# For all numerical operations, especially in the recommendation logic
+numpy
+
+# The custom component for the interactive star ratings
+streamlit-star-rating
+
+
+# -------------------------------------------------
+# Dependencies for Model Training (from the .ipynb notebook)
+# -------------------------------------------------
+
+# The JIT compiler used to accelerate the ALS training loops
+numba
+
+
+# -------------------------------------------------
+# Dependencies for Data Pre-processing (the poster script)
+# -------------------------------------------------
+
+# For making API calls to The Movie Database (TMDb)
+requests
+
+# For displaying a progress bar during the long poster-fetching process
+tqdm
+
+
+# -------------------------------------------------
+# Development Environment (for running the notebook)
+# -------------------------------------------------
+
+# To open and run the .ipynb notebook file
+jupyter
