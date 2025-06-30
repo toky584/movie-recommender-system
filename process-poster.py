@@ -6,7 +6,7 @@ import concurrent.futures
 
 # --- CONFIGURATION ---
 # PASTE YOUR TMDB API KEY HERE
-TMDB_API_KEY = "a153c9dedb3dc5a4872b6472f602af55"
+TMDB_API_KEY = "your-api-here"
 
 # Base URL for TMDb images
 IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500"
