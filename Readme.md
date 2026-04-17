@@ -1,57 +1,44 @@
-# 🎬 Personalized Movie Recommender System
+# 🎬 Personalized Movie Recommender Web App
 
-A real-time, personalized movie recommender system built with Python and Streamlit. This application demonstrates how to solve the "cold start" problem by allowing a new user to rate movies and instantly receive tailored recommendations based on a pre-trained Alternating Least Squares (ALS) model.
+A modern, real-time movie recommender system built with **Flask**, **HTML5/CSS3**, and **JavaScript**. This application uses a pre-trained Alternating Least Squares (ALS) model to provide personalized movie suggestions based on user ratings.
 
 ![Movie Recommender App Screenshot](app_screenshot.png)
 
----
-
-## 🚀 Live Demo
-
-**Interact with the live application here:**
-
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://movie-recommender-system-als.streamlit.app)
-
-<br>
-
----
-
 ## ✨ Features
 
-- **Real-time Personalization:** Get movie recommendations tailored to your taste, even as a brand new user.
-- **Interactive Rating:** Rate movies using a simple and intuitive star-rating system.
-- **Hybrid Interface:**
-    - **Browse & Rate:** Rate movies directly from the recommendation grid.
-    - **Search & Rate:** Find any specific movie from a catalog of over 60,000 to add to your ratings.
-- **Dynamic UI:** The recommendation grid updates as you provide more ratings, creating an engaging user experience.
-- **High-Performance Backend:** The original model was trained using Numba for C-speed calculations.
-
----
+-   **Modern Web UI:** A sleek, dark-themed interface inspired by popular streaming platforms.
+-   **Real-time Personalization:** Instant recommendations based on your movie ratings.
+-   **Live Search:** Search through a catalog of over 60,000 movies.
+-   **Dynamic Updates:** The recommendation grid refreshes as you provide more feedback.
+-   **Local Storage:** Your ratings are saved locally in your browser so you don't lose progress.
+-   **Clean Architecture:** Separated frontend (Flask/JS) and backend (Python/Recommender Engine) logic.
 
 ## 📂 Project Structure
 
-This project is organized into several key files:
-
--   `model_training.ipynb`: A Jupyter Notebook containing all the code for training the Alternating Least Squares (ALS) model from the MovieLens 25M dataset.
--   `process-poster.py`: A Python script that queries The Movie Database (TMDb) API to fetch poster URLs for each movie.
--   `app.py`: The main Streamlit application file that loads the pre-trained model and serves the interactive user interface.
--   `artifacts/`: This directory stores the output of the model training—the final user/movie vectors and biases.
--   `data/`: This directory stores the raw and processed movie data, including the final `movies_with_posters.csv`.
-
----
+```text
+movie-recommender-system/
+├── app/                    # Web Application Frontend
+│   ├── static/             # Static Assets (CSS, JS, Images)
+│   │   ├── css/            # Stylesheets
+│   │   └── js/             # Frontend Logic
+│   └── templates/          # HTML Templates (Flask/Jinja2)
+├── src/                    # Core Recommender Logic
+│   └── recommender.py      # Recommendation Engine Class
+├── artifacts/              # Pre-trained Model Artifacts (.npz, .pkl)
+├── data/                   # Processed Dataset (CSV)
+├── app.py                  # Flask Application Entry Point
+└── requirements.txt        # Python Dependencies
+```
 
 ## 🛠️ Setup and Installation
 
-To run this application on your local machine, please follow these steps.
-
-**1. Clone the repository:**
-*(Replace `your-username` with your actual GitHub username)*
+### 1. Clone the repository:
 ```bash
 git clone https://github.com/your-username/movie-recommender-system.git
 cd movie-recommender-system
 ```
 
-**2. Create a Virtual Environment & Install Dependencies:**
+### 2. Create a Virtual Environment & Install Dependencies:
 ```bash
 # Create and activate a virtual environment
 python -m venv venv
@@ -61,23 +48,30 @@ source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
 pip install -r requirements.txt
 ```
 
-**3. Download Model Artifacts with Git LFS:**
-This project uses Git LFS (Large File Storage) for the model and data files.
+### 3. Download Model Artifacts (Git LFS):
+Ensure you have Git LFS installed to pull the model files.
 ```bash
-# First-time setup for Git LFS
 git lfs install
-
-# Download the large model and data files
 git lfs pull
 ```
 
----
-
 ## 🚀 Usage
 
-Once the setup is complete, run the Streamlit app from your terminal:
+Run the Flask application from your terminal:
 
 ```bash
-streamlit run app.py
+python app.py
 ```
-A new tab should open in your web browser with the application running.
+
+Open your browser and navigate to `http://127.0.0.1:5000`.
+
+## 🧠 How it Works
+
+The system uses **Matrix Factorization** via the **Alternating Least Squares (ALS)** algorithm. 
+
+1.  **Offline Training:** The model was trained on the MovieLens 25M dataset to generate user and movie vectors.
+2.  **Online Inference:** When you rate movies, the app solves a small linear system in real-time to compute *your* user vector.
+3.  **Ranking:** Your user vector is dotted with all movie vectors to predict scores, which are then ranked to provide recommendations.
+
+---
+Built with ❤️ for Movie Lovers.
