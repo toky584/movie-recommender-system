@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommender 🎬</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-film"></i> MovieRec</h2>
+            </div>
+            
+            <div class="search-section">
+                <h3>Find & Rate</h3>
+                <div class="search-box">
+                    <input type="text" id="movie-search" placeholder="Search movies...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div id="search-results" class="search-results"></div>
+            </div>
+
+            <div class="my-ratings-section">
+                <h3>My Ratings (<span id="rating-count">0</span>)</h3>
+                <div id="rated-movies-list" class="rated-movies-list">
+                    <!-- Rated movies will appear here -->
+                </div>
+                <button id="reset-ratings" class="btn btn-secondary">Reset All</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <h1>Personalized Recommendations</h1>
+                <p>Rate movies to get tailored suggestions instantly!</p>
+                <div class="stats-banner" id="stats-banner">
+                    <p>You've rated <span id="stat-count">0</span> movies. <span id="stat-message">Rate more for better results!</span></p>
+                    <button id="update-recommendations" class="btn btn-primary">Update Recommendations</button>
+                </div>
+            </header>
+
+            <section class="recommendations-grid" id="movie-grid">
+                <!-- Movies will be loaded here via JS -->
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> Loading movies...
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
