@@ -24,6 +24,12 @@ def get_random_movies():
     movies = recommender.get_random_movies(n=n)
     return jsonify(movies)
 
+@app.route('/api/movies/popular')
+def get_popular_movies():
+    n = request.args.get('n', 12, type=int)
+    movies = recommender.get_popular_movies(n=n)
+    return jsonify(movies)
+
 @app.route('/api/search')
 def search():
     query = request.args.get('q', '')
