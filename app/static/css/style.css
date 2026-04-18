@@ -167,6 +167,97 @@ header p {
     border-left: 4px solid var(--primary-color);
 }
 
+.refresh-indicator {
+    color: var(--accent-color);
+    font-size: 0.9rem;
+}
+
+.genre-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.genre-chip {
+    background: #2a2a2a;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.genre-chip.filter {
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 5px 12px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.genre-chip.filter:hover {
+    background: #3a3a3a;
+    color: var(--text-light);
+}
+
+.genre-chip.filter.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.genre-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 0.6rem;
+}
+
+.because {
+    font-size: 0.72rem;
+    color: var(--accent-color);
+    margin-bottom: 0.6rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: help;
+}
+
+.because i {
+    margin-right: 4px;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+}
+
+/* Skeleton loading */
+.movie-card.skeleton { pointer-events: none; }
+
+.skeleton-box {
+    background: linear-gradient(90deg, #222 25%, #2d2d2d 37%, #222 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease infinite;
+}
+
+.skeleton-line {
+    height: 14px;
+    margin: 10px 0;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #222 25%, #2d2d2d 37%, #222 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease infinite;
+}
+
+.skeleton-line.short { width: 60%; }
+
+@keyframes shimmer {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+}
+
 .btn {
     padding: 0.8rem 1.5rem;
     border-radius: 4px;

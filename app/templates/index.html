@@ -39,16 +39,12 @@
                 <p>Rate movies to get tailored suggestions instantly!</p>
                 <div class="stats-banner" id="stats-banner">
                     <p>You've rated <span id="stat-count">0</span> movies. <span id="stat-message">Rate more for better results!</span></p>
-                    <button id="update-recommendations" class="btn btn-primary">Update Recommendations</button>
+                    <span id="refresh-indicator" class="refresh-indicator" hidden><i class="fas fa-circle-notch fa-spin"></i> Updating…</span>
                 </div>
+                <div id="genre-filters" class="genre-filters"></div>
             </header>
 
-            <section class="recommendations-grid" id="movie-grid">
-                <!-- Movies will be loaded here via JS -->
-                <div class="loading">
-                    <i class="fas fa-spinner fa-spin"></i> Loading movies...
-                </div>
-            </section>
+            <section class="recommendations-grid" id="movie-grid"></section>
         </main>
     </div>
 

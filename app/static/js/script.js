@@ -6,32 +6,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const ratingCount = document.getElementById('rating-count');
     const statCount = document.getElementById('stat-count');
     const statMessage = document.getElementById('stat-message');
-    const updateBtn = document.getElementById('update-recommendations');
     const resetBtn = document.getElementById('reset-ratings');
+    const genreFilters = document.getElementById('genre-filters');
+    const refreshIndicator = document.getElementById('refresh-indicator');
 
     let userRatings = JSON.parse(localStorage.getItem('userRatings')) || {};
     let currentMovies = [];
+    let activeGenre = null;
 
-    // Initialize
     updateUI();
-    loadRandomMovies();
+    if (Object.keys(userRatings).length > 0) {
+        getRecommendations();
+    } else {
+        loadPopularMovies();
+    }
 
-    // Event Listeners
     movieSearch.addEventListener('input', debounce(handleSearch, 300));
-    updateBtn.addEventListener('click', getRecommendations);
     resetBtn.addEventListener('click', resetRatings);
 
     function debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
             clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
+            timeout = setTimeout(() => func(...args), wait);
         };
     }
+
+    const debouncedRecommend = debounce(() => {
+        if (Object.keys(userRatings).length > 0) getRecommendations();
+    }, 500);
 
     async function handleSearch() {
         const query = movieSearch.value.trim();
@@ -39,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
             searchResults.innerHTML = '';
             return;
         }
-
         const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
         const movies = await response.json();
         renderSearchResults(movies);
@@ -50,9 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         movies.forEach(movie => {
             const div = document.createElement('div');
             div.className = 'search-item';
-            div.innerHTML = `
-                <span>${movie.title}</span>
-            `;
+            div.textContent = movie.title;
             div.onclick = () => {
                 addMovieToRatings(movie);
                 movieSearch.value = '';
@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         saveRatings();
         updateUI();
+        debouncedRecommend();
     }
 
     function saveRatings() {
@@ -80,13 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const count = Object.keys(userRatings).length;
         ratingCount.textContent = count;
         statCount.textContent = count;
-        
-        if (count < 5) {
-            statMessage.textContent = 'Rate more for better results!';
-        } else {
-            statMessage.textContent = 'Great! Update to see your personalized list.';
-        }
-
+        statMessage.textContent = count < 5
+            ? 'Rate more for better results!'
+            : 'Recommendations refresh automatically as you rate.';
         renderRatedList();
     }
 
@@ -96,24 +93,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const div = document.createElement('div');
             div.className = 'rated-item';
             div.innerHTML = `
-                <img src="${movie.poster_url}" alt="${movie.title}">
+                <img src="${movie.poster_url}" alt="" onerror="this.src='https://via.placeholder.com/40x60?text=?'">
                 <div class="rated-item-info">
-                    <h4>${movie.title}</h4>
-                    <div class="stars-small">
-                        ${getStarsHTML(movie.rating)}
-                    </div>
+                    <h4>${escapeHtml(movie.title)}</h4>
+                    <div class="stars-small">${getStarsHTML(movie.rating)}</div>
                 </div>
-                <i class="fas fa-times delete-rating" onclick="removeRating(${id})"></i>
+                <i class="fas fa-times delete-rating" data-remove="${id}"></i>
             `;
+            div.querySelector('[data-remove]').onclick = () => removeRating(id);
             ratedMoviesList.appendChild(div);
         });
     }
 
-    window.removeRating = (id) => {
+    function removeRating(id) {
         delete userRatings[id];
         saveRatings();
         updateUI();
-    };
+        if (Object.keys(userRatings).length === 0) {
+            loadPopularMovies();
+        } else {
+            debouncedRecommend();
+        }
+    }
 
     function getStarsHTML(rating) {
         let html = '';
@@ -123,50 +124,104 @@ document.addEventListener('DOMContentLoaded', () => {
         return html;
     }
 
-    async function loadRandomMovies() {
-        movieGrid.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading suggestions...</div>';
-        const response = await fetch('/api/movies/random?n=12');
+    function renderSkeletons(n = 12) {
+        movieGrid.innerHTML = '';
+        for (let i = 0; i < n; i++) {
+            const card = document.createElement('div');
+            card.className = 'movie-card skeleton';
+            card.innerHTML = `
+                <div class="movie-poster skeleton-box"></div>
+                <div class="movie-info">
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line short"></div>
+                </div>
+            `;
+            movieGrid.appendChild(card);
+        }
+    }
+
+    async function loadPopularMovies() {
+        renderSkeletons();
+        const response = await fetch('/api/movies/popular?n=12');
         currentMovies = await response.json();
         renderMovieGrid(currentMovies);
     }
 
     async function getRecommendations() {
-        if (Object.keys(userRatings).length === 0) {
-            alert('Please rate at least one movie first!');
-            return;
-        }
+        refreshIndicator.hidden = false;
+        renderSkeletons();
 
-        movieGrid.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Finding movies you\'ll love...</div>';
-        
-        // Extract only movieId: rating for the API
         const ratingsForApi = {};
         Object.entries(userRatings).forEach(([id, data]) => {
             ratingsForApi[id] = data.rating;
         });
 
-        const response = await fetch('/api/recommend', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ratings: ratingsForApi })
+        try {
+            const response = await fetch('/api/recommend', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ratings: ratingsForApi })
+            });
+            currentMovies = await response.json();
+            renderMovieGrid(currentMovies);
+        } finally {
+            refreshIndicator.hidden = true;
+        }
+    }
+
+    function renderGenreFilters(movies) {
+        const genres = new Set();
+        movies.forEach(m => (m.genres || '').split('|').forEach(g => g && genres.add(g)));
+        genreFilters.innerHTML = '';
+        if (genres.size === 0) return;
+
+        const all = document.createElement('span');
+        all.className = `genre-chip filter ${activeGenre === null ? 'active' : ''}`;
+        all.textContent = 'All';
+        all.onclick = () => { activeGenre = null; renderMovieGrid(currentMovies); };
+        genreFilters.appendChild(all);
+
+        [...genres].sort().forEach(g => {
+            const chip = document.createElement('span');
+            chip.className = `genre-chip filter ${activeGenre === g ? 'active' : ''}`;
+            chip.textContent = g;
+            chip.onclick = () => { activeGenre = (activeGenre === g ? null : g); renderMovieGrid(currentMovies); };
+            genreFilters.appendChild(chip);
         });
-        
-        currentMovies = await response.json();
-        renderMovieGrid(currentMovies);
     }
 
     function renderMovieGrid(movies) {
+        renderGenreFilters(movies);
         movieGrid.innerHTML = '';
-        movies.forEach(movie => {
+
+        const filtered = activeGenre
+            ? movies.filter(m => (m.genres || '').split('|').includes(activeGenre))
+            : movies;
+
+        if (filtered.length === 0) {
+            movieGrid.innerHTML = `<div class="empty-state">No ${escapeHtml(activeGenre)} movies in current picks.</div>`;
+            return;
+        }
+
+        filtered.forEach(movie => {
             const card = document.createElement('div');
             card.className = 'movie-card';
             const userRating = userRatings[movie.movieId]?.rating || 0;
-            
+            const genres = (movie.genres || '').split('|').filter(Boolean);
+            const because = movie.because && movie.because.length
+                ? `<div class="because" title="${escapeHtml(movie.because.join(' • '))}"><i class="fas fa-lightbulb"></i> Because you liked ${escapeHtml(movie.because[0])}</div>`
+                : '';
+
             card.innerHTML = `
                 <div class="movie-poster">
-                    <img src="${movie.poster_url}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Poster'">
+                    <img src="${movie.poster_url}" alt="" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450?text=No+Poster'">
                 </div>
                 <div class="movie-info">
-                    <h3>${movie.title}</h3>
+                    <h3 title="${escapeHtml(movie.title)}">${escapeHtml(movie.title)}</h3>
+                    <div class="genre-chips">
+                        ${genres.slice(0, 3).map(g => `<span class="genre-chip">${escapeHtml(g)}</span>`).join('')}
+                    </div>
+                    ${because}
                     <div class="stars" data-movie-id="${movie.movieId}">
                         ${getInteractiveStarsHTML(userRating)}
                     </div>
@@ -174,14 +229,13 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             movieGrid.appendChild(card);
 
-            // Add star click listeners
-            const stars = card.querySelectorAll('.star');
-            stars.forEach(star => {
-                star.onclick = () => {
-                    const rating = parseInt(star.dataset.value);
-                    addMovieToRatings(movie, rating);
-                    renderMovieGrid(currentMovies); // Re-render to show active stars
-                };
+            const starsContainer = card.querySelector('.stars');
+            starsContainer.addEventListener('click', e => {
+                const star = e.target.closest('.star');
+                if (!star) return;
+                const rating = parseInt(star.dataset.value);
+                addMovieToRatings(movie, rating);
+                starsContainer.innerHTML = getInteractiveStarsHTML(rating);
             });
         });
     }
@@ -194,12 +248,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return html;
     }
 
+    function escapeHtml(str) {
+        return String(str ?? '').replace(/[&<>"']/g, c => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+    }
+
     function resetRatings() {
         if (confirm('Are you sure you want to reset all your ratings?')) {
             userRatings = {};
+            activeGenre = null;
             saveRatings();
             updateUI();
-            loadRandomMovies();
+            loadPopularMovies();
         }
     }
 });
