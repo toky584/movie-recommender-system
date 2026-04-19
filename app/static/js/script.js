@@ -52,13 +52,39 @@ document.addEventListener('DOMContentLoaded', () => {
         movies.forEach(movie => {
             const div = document.createElement('div');
             div.className = 'search-item';
-            div.textContent = movie.title;
-            div.onclick = () => {
-                addMovieToRatings(movie);
+            div.innerHTML = `
+                <div class="search-item-title">${escapeHtml(movie.title)}</div>
+                <div class="search-item-rate">
+                    <span class="search-item-prompt">Rate:</span>
+                    <span class="stars picker" data-movie-id="${movie.movieId}">
+                        ${getInteractiveStarsHTML(0)}
+                    </span>
+                </div>
+            `;
+            const picker = div.querySelector('.stars.picker');
+            attachStarPicker(picker, rating => {
+                addMovieToRatings(movie, rating);
                 movieSearch.value = '';
                 searchResults.innerHTML = '';
-            };
+            });
             searchResults.appendChild(div);
+        });
+    }
+
+    function attachStarPicker(container, onPick) {
+        const stars = container.querySelectorAll('.star');
+        stars.forEach(star => {
+            star.addEventListener('mouseenter', () => {
+                const value = parseInt(star.dataset.value);
+                stars.forEach(s => s.classList.toggle('hover', parseInt(s.dataset.value) <= value));
+            });
+            star.addEventListener('mouseleave', () => {
+                stars.forEach(s => s.classList.remove('hover'));
+            });
+            star.addEventListener('click', e => {
+                e.stopPropagation();
+                onPick(parseInt(star.dataset.value));
+            });
         });
     }
 
@@ -96,11 +122,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 <img src="${movie.poster_url}" alt="" onerror="this.src='https://via.placeholder.com/40x60?text=?'">
                 <div class="rated-item-info">
                     <h4>${escapeHtml(movie.title)}</h4>
-                    <div class="stars-small">${getStarsHTML(movie.rating)}</div>
+                    <div class="stars stars-small picker" data-movie-id="${id}">
+                        ${getInteractiveStarsHTML(movie.rating)}
+                    </div>
                 </div>
                 <i class="fas fa-times delete-rating" data-remove="${id}"></i>
             `;
             div.querySelector('[data-remove]').onclick = () => removeRating(id);
+            const picker = div.querySelector('.stars.picker');
+            attachStarPicker(picker, rating => {
+                userRatings[id].rating = rating;
+                saveRatings();
+                updateUI();
+                debouncedRecommend();
+            });
             ratedMoviesList.appendChild(div);
         });
     }
@@ -114,14 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             debouncedRecommend();
         }
-    }
-
-    function getStarsHTML(rating) {
-        let html = '';
-        for (let i = 1; i <= 5; i++) {
-            html += `<i class="fa${i <= rating ? 's' : 'r'} fa-star"></i>`;
-        }
-        return html;
     }
 
     function renderSkeletons(n = 12) {
@@ -230,12 +257,9 @@ document.addEventListener('DOMContentLoaded', () => {
             movieGrid.appendChild(card);
 
             const starsContainer = card.querySelector('.stars');
-            starsContainer.addEventListener('click', e => {
-                const star = e.target.closest('.star');
-                if (!star) return;
-                const rating = parseInt(star.dataset.value);
+            attachStarPicker(starsContainer, rating => {
                 addMovieToRatings(movie, rating);
-                starsContainer.innerHTML = getInteractiveStarsHTML(rating);
+                setActiveStars(starsContainer, rating);
             });
         });
     }
@@ -243,9 +267,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function getInteractiveStarsHTML(activeRating) {
         let html = '';
         for (let i = 1; i <= 5; i++) {
-            html += `<i class="fas fa-star star ${i <= activeRating ? 'active' : ''}" data-value="${i}"></i>`;
+            html += `<i class="fas fa-star star ${i <= activeRating ? 'active' : ''}" data-value="${i}" title="${i} star${i > 1 ? 's' : ''}"></i>`;
         }
         return html;
+    }
+
+    function setActiveStars(container, rating) {
+        container.querySelectorAll('.star').forEach(s => {
+            s.classList.toggle('active', parseInt(s.dataset.value) <= rating);
+        });
     }
 
     function escapeHtml(str) {
