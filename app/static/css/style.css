@@ -88,14 +88,35 @@ body {
 }
 
 .search-item {
-    padding: 0.8rem;
+    padding: 0.7rem 0.8rem;
     border-bottom: 1px solid #333;
-    cursor: pointer;
     transition: background 0.2s;
 }
 
 .search-item:hover {
-    background: #333;
+    background: #2a2a2a;
+}
+
+.search-item-title {
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+}
+
+.search-item-rate {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.search-item-prompt {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.search-item-rate .star {
+    font-size: 0.95rem;
 }
 
 .rated-movies-list {
@@ -131,8 +152,12 @@ body {
 }
 
 .stars-small {
-    color: #ffc107;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+    gap: 2px;
+}
+
+.stars-small .star {
+    font-size: 0.75rem;
 }
 
 /* Main Content Styling */
@@ -337,7 +362,6 @@ header p {
 }
 
 .stars {
-    color: #ffc107;
     cursor: pointer;
     display: flex;
     gap: 5px;
@@ -345,15 +369,17 @@ header p {
 
 .star {
     font-size: 1.2rem;
-    transition: color 0.2s;
+    color: #4a4a4a;
+    transition: color 0.15s, transform 0.15s;
 }
 
 .star.active {
     color: #ffc107;
 }
 
-.star:hover, .star:hover ~ .star {
+.star.hover {
     color: #ffdb70;
+    transform: scale(1.1);
 }
 
 .loading {
