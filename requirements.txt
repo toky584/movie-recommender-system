@@ -1,5 +1,4 @@
-flask
-numpy
-pandas
-pickle5; python_version < '3.8'
-gunicorn
+flask==3.0.3
+gunicorn==22.0.0
+numpy==1.26.4
+pandas==2.2.2
