@@ -2,11 +2,13 @@
 
 A modern, real-time movie recommender system built with **Flask**, **HTML5/CSS3**, and **JavaScript**. This application uses a pre-trained Alternating Least Squares (ALS) model to provide personalized movie suggestions based on user ratings.
 
+🔗 **Live demo:** [movie-recommender-kbie.onrender.com](https://movie-recommender-kbie.onrender.com)
+
 ![Movie Recommender App Screenshot](app_screenshot.png)
 
 ## ✨ Features
 
--   **Modern Web UI:** A sleek, dark-themed interface inspired by popular streaming platforms.
+-   **Modern Web UI:** A clean, light-themed interface with yellow accents.
 -   **Real-time Personalization:** Instant recommendations based on your movie ratings.
 -   **Live Search:** Search through a catalog of over 60,000 movies.
 -   **Dynamic Updates:** The recommendation grid refreshes as you provide more feedback.
