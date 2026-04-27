@@ -1,12 +1,12 @@
 :root {
     --primary-color: #e5d609;
     --secondary-color: #2f2f2f;
-    --bg-dark: #141414;
-    --sidebar-bg: #181818;
-    --text-light: #ffffff;
-    --text-muted: #b3b3b3;
-    --card-bg: #242424;
-    --accent-color: #46d369;
+    --bg-dark: #ffffff;
+    --sidebar-bg: #f5f5f5;
+    --text-light: #1a1a1a;
+    --text-muted: #666666;
+    --card-bg: #ffffff;
+    --accent-color: #2ea24a;
 }
 
 * {
@@ -16,7 +16,7 @@
 }
 
 body {
-    font-family: 'Poppins', serif;
+    font-family: 'Poppins', sans-serif;
     background-color: var(--bg-dark);
     color: var(--text-light);
     line-height: 1.6;
@@ -35,7 +35,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    border-right: 1px solid #333;
+    border-right: 1px solid #e0e0e0;
     position: sticky;
     top: 0;
     height: 100vh;
@@ -66,9 +66,9 @@ body {
     width: 100%;
     padding: 0.8rem 1rem 0.8rem 2.5rem;
     border-radius: 4px;
-    border: none;
-    background-color: #333;
-    color: white;
+    border: 1px solid #e0e0e0;
+    background-color: #ffffff;
+    color: var(--text-light);
 }
 
 .search-box i {
@@ -83,18 +83,19 @@ body {
     margin-top: 0.5rem;
     max-height: 300px;
     overflow-y: auto;
-    background: #222;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
     border-radius: 4px;
 }
 
 .search-item {
     padding: 0.7rem 0.8rem;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #e0e0e0;
     transition: background 0.2s;
 }
 
 .search-item:hover {
-    background: #2a2a2a;
+    background: #f0f0f0;
 }
 
 .search-item-title {
@@ -130,7 +131,7 @@ body {
     display: flex;
     align-items: center;
     gap: 0.8rem;
-    background: #222;
+    background: #f0f0f0;
     padding: 0.5rem;
     border-radius: 4px;
 }
@@ -182,7 +183,7 @@ header p {
 }
 
 .stats-banner {
-    background: #222;
+    background: #f5f5f5;
     padding: 1.5rem;
     border-radius: 8px;
     margin-top: 1.5rem;
@@ -205,7 +206,7 @@ header p {
 }
 
 .genre-chip {
-    background: #2a2a2a;
+    background: #f0f0f0;
     color: var(--text-muted);
     font-size: 0.72rem;
     padding: 3px 8px;
@@ -221,13 +222,13 @@ header p {
 }
 
 .genre-chip.filter:hover {
-    background: #3a3a3a;
+    background: #e0e0e0;
     color: var(--text-light);
 }
 
 .genre-chip.filter.active {
     background: var(--primary-color);
-    color: white;
+    color: #1a1a1a;
 }
 
 .genre-chips {
@@ -262,7 +263,7 @@ header p {
 .movie-card.skeleton { pointer-events: none; }
 
 .skeleton-box {
-    background: linear-gradient(90deg, #222 25%, #2d2d2d 37%, #222 63%);
+    background: linear-gradient(90deg, #ececec 25%, #f5f5f5 37%, #ececec 63%);
     background-size: 400% 100%;
     animation: shimmer 1.4s ease infinite;
 }
@@ -271,7 +272,7 @@ header p {
     height: 14px;
     margin: 10px 0;
     border-radius: 3px;
-    background: linear-gradient(90deg, #222 25%, #2d2d2d 37%, #222 63%);
+    background: linear-gradient(90deg, #ececec 25%, #f5f5f5 37%, #ececec 63%);
     background-size: 400% 100%;
     animation: shimmer 1.4s ease infinite;
 }
@@ -294,12 +295,12 @@ header p {
 
 .btn-primary {
     background-color: var(--primary-color);
-    color: white;
+    color: #1a1a1a;
 }
 
 .btn-secondary {
-    background-color: #444;
-    color: white;
+    background-color: #e0e0e0;
+    color: #1a1a1a;
     width: 100%;
 }
 
@@ -318,12 +319,14 @@ header p {
     background-color: var(--card-bg);
     border-radius: 8px;
     overflow: hidden;
-    transition: transform 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s;
     position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .movie-card:hover {
     transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
 .movie-poster {
@@ -369,7 +372,7 @@ header p {
 
 .star {
     font-size: 1.2rem;
-    color: #4a4a4a;
+    color: #d0d0d0;
     transition: color 0.15s, transform 0.15s;
 }
 
@@ -396,14 +399,14 @@ header p {
 }
 
 ::-webkit-scrollbar-track {
-    background: #141414;
+    background: #f0f0f0;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #333;
+    background: #bbbbbb;
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #444;
+    background: #999999;
 }
