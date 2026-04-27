@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #e50914;
+    --primary-color: #e5d609;
     --secondary-color: #2f2f2f;
     --bg-dark: #141414;
     --sidebar-bg: #181818;
@@ -16,7 +16,7 @@
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', serif;
     background-color: var(--bg-dark);
     color: var(--text-light);
     line-height: 1.6;
