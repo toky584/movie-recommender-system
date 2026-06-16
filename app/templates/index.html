@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>                                
+    <noscript>
+        <div class="noscript-banner" role="alert">
+            <strong>JavaScript is required.</strong>
+            This movie recommender uses JavaScript to fetch suggestions, store your ratings, and refresh recommendations as you rate. Please enable JavaScript in your browser to continue.
+        </div>
+    </noscript>
+
+    <div class="container">
+        <aside class="sidebar" aria-label="Search and ratings">
+            <header class="sidebar-header">
+                <h2><i class="fas fa-film" aria-hidden="true"></i> MovieRec</h2>
+            </header>
+
+            <nav class="search-section" aria-label="Movie search">
+                <h3>Find &amp; Rate</h3>
+                <div class="search-box">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                    <input
+                        type="text"
+                        id="movie-search"
+                        class="search-input"
+                        placeholder="Search movies..."
+                        aria-label="Search movies"
+                        autocomplete="off"
+                        spellcheck="false">
+                    <kbd class="kbd-hint" aria-hidden="true">/</kbd>
+                </div>
+                <div
+                    id="search-results"
+                    class="search-results"
+                    role="listbox"
+                    aria-label="Search results"></div>
+            </nav>
+
+            <section class="my-ratings-section" aria-label="Your ratings">
+                <h3>My Ratings (<span id="rating-count">0</span>)</h3>
+                <div id="rated-movies-list" class="rated-movies-list">
+                    <!-- Rated movies will appear here -->
+                </div>
+                <button
+                    type="button"
+                    id="reset-ratings"
+                    class="btn btn-secondary">Reset All</button>
+            </section>
+        </aside>
+
+        <main class="main-content" id="main-content">
+            <header class="hero">
+                <h1 class="hero-title">Personalized Recommendations</h1>
+                <p class="hero-tagline">A handpicked reel, tuned to your taste — rate a few films and watch the marquee rearrange itself.</p>
+                <div class="stats-banner" id="stats-banner">
+                    <p>You've rated <span id="stat-count">0</span> movies. <span id="stat-message">Rate more for better results!</span></p>
+                    <span id="refresh-indicator" class="refresh-indicator" hidden><i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i> Updating&hellip;</span>
+                </div>
+                <div
+                    id="genre-filters"
+                    class="genre-filters"
+                    role="group"
+                    aria-label="Filter by genre"></div>
+            </header>
+
+            <section
+                class="recommendations-grid"
+                id="movie-grid"
+                aria-live="polite"
+                aria-label="Movie recommendations">
+                <div class="welcome-state">
+                    <p>Loading your reel&hellip;</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

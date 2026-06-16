@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Local environment
+.env
+.env.local
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Keep these for deployment (do NOT ignore):
+#   artifacts/  -> model weights, required at runtime
+#   data/       -> movie metadata, required at runtime
